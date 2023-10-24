@@ -8,6 +8,11 @@ import matplotlib.pyplot as plt
 import time
 import base64
 from PIL import Image
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
 #############################
  #Setting page to wide view#
 #############################
@@ -143,6 +148,17 @@ def display_eda_section():
     else:
         if st.button("Proceed to ML Training", key="btn_eda_next"):
             st.session_state.page = "ml"
+
+def train_model(model_name, X_train, y_train):
+    if model_name == "Decision Tree":
+        model = DecisionTreeClassifier()
+    elif model_name == "Logistic Regression":
+        model = LogisticRegression(max_iter=10000) # Added increased max_iter for better convergence
+    else:
+        raise ValueError(f"Model {model_name} not supported")
+
+    model.fit(X_train, y_train)
+    return model
 
 
 def display_ml_section():
