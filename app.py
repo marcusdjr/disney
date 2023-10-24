@@ -155,7 +155,7 @@ def train_model(model_name, X_train, y_train):
     if model_name == "Decision Tree":
         model = DecisionTreeClassifier()
     elif model_name == "Logistic Regression":
-        model = LogisticRegression(max_iter=10000) # Added increased max_iter for better convergence
+        model = LogisticRegression(max_iter=10000) 
     else:
         raise ValueError(f"Model {model_name} not supported")
 
