@@ -40,7 +40,9 @@ with col2:
 with col3:
     st.write("")
 
-
+#############################
+        #SideBar#
+#############################
 st.sidebar.markdown("## About Disney's BYOD App")
 st.sidebar.markdown("This application allows users to bring their own dataset for analysis, visualizations and machine learning. Please feel free to upload your own dataset, and then explore the data in various ways.")
 st.sidebar.info("Find more information and the source code for this app on [Github](https://github.com/marcusdjr).", icon="ℹ️")
@@ -48,7 +50,9 @@ st.sidebar.info("Find more information and the source code for this app on [Gith
 def load_lottiefile(filepath: str):
     with open(filepath, "r") as f:
         return json.load(f)
-
+#############################
+    #Uploading Feature#
+#############################
 def display_upload_section():
     st.subheader("Mickey’s Data Upload Station")
     uploaded_file = st.file_uploader("Pleasse upload a CSV file", type="csv")
@@ -67,7 +71,9 @@ def display_upload_section():
         else:
             if st.button("Next", key="btn_upload"):
                 st.session_state.page = "eda"
-
+#############################
+      #EDA Feature#
+#############################
 def display_eda_section():
     st.subheader("Mickey's Data Dive Station")
     
@@ -148,7 +154,9 @@ def display_eda_section():
     else:
         if st.button("Proceed to ML Training", key="btn_eda_next"):
             st.session_state.page = "ml"
-
+#############################
+#Machine Learning Feature#
+#############################
 def train_model(model_name, X_train, y_train):
     if model_name == "Decision Tree":
         model = DecisionTreeClassifier()
