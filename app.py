@@ -8,6 +8,13 @@ import matplotlib.pyplot as plt
 import time
 import base64
 from PIL import Image
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+
 #############################
  #Setting page to wide view#
 #############################
@@ -144,9 +151,38 @@ def display_eda_section():
         if st.button("Proceed to ML Training", key="btn_eda_next"):
             st.session_state.page = "ml"
 
+def train_model(model_name, X_train, y_train):
+    if model_name == "Decision Tree":
+        model = DecisionTreeClassifier()
+    elif model_name == "Logistic Regression":
+        model = LogisticRegression(max_iter=10000) # Added increased max_iter for better convergence
+    else:
+        raise ValueError(f"Model {model_name} not supported")
+
+    model.fit(X_train, y_train)
+    return model
 
 def display_ml_section():
     st.subheader("Train ML Model")
+
+    model_name = st.selectbox("Select Model", ["Decision Tree", "Logistic Regression"])
+
+    if "dataframe" in st.session_state:
+        features = st.session_state.dataframe.dropna(axis=1)
+        target_col = st.selectbox('Select Target Column:', features.columns)
+        features = features.drop(target_col, axis=1)
+
+        X = features.values
+        y = st.session_state.dataframe[target_col].values
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        if st.button("Train Model"):
+            with st.spinner("Training..."):
+                model = train_model(model_name, X_train, y_train)
+                y_pred = model.predict(X_test)
+                accuracy = accuracy_score(y_test, y_pred)
+                st.success(f"Model Trained. Test Accuracy: {accuracy:.2f}")
 
 if 'page' not in st.session_state:
     st.session_state.page = "upload"
@@ -157,4 +193,5 @@ elif st.session_state.page == "eda":
     display_eda_section()
 elif st.session_state.page == "ml":
     display_ml_section()
+
 
