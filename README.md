@@ -4,7 +4,7 @@
 
 Welcome to Mickey's Machine Learning Lab! This is an interactive web application built using Streamlit that offers users the capability to upload datasets, perform some basic exploratory data analysis, and then train machine learning models. The application provides a seamless interface for users to quickly understand your data and experiment with various machine learning algorithms without diving deep into code.
 
-# Features
+# Features-
 
 ## Data Uploading:
 Users can easily upload their datasets in CSV format, with a preview option available to quickly glance at the initial rows of the dataset.
