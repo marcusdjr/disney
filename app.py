@@ -10,9 +10,16 @@ import base64
 from PIL import Image
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+import streamlit as st
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-
+from lazypredict.Supervised import LazyClassifier, LazyRegressor
+import pickle
+import base64
 #############################
  #Setting page to wide view#
 #############################
@@ -104,7 +111,7 @@ def display_eda_section():
     
     if plot_type == 'Histogram':
         st.set_option('deprecation.showPyplotGlobalUse', False)
-        plt.hist(st.session_state.dataframe[column_to_plot], bins=30, color='#4682B4', edgecolor='black')  # added more bins and colors
+        plt.hist(st.session_state.dataframe[column_to_plot], bins=30, color='#4682B4', edgecolor='black')  
         plt.title(f'Histogram of {column_to_plot}')
         plt.xlabel(column_to_plot)
         plt.ylabel('Frequency')
@@ -157,39 +164,53 @@ def display_eda_section():
 #############################
 #Machine Learning Feature#
 #############################
-def train_model(model_name, X_train, y_train):
-    if model_name == "Decision Tree":
-        model = DecisionTreeClassifier()
-    elif model_name == "Logistic Regression":
-        model = LogisticRegression(max_iter=10000) # Added increased max_iter for better convergence
-    else:
-        raise ValueError(f"Model {model_name} not supported")
-
-    model.fit(X_train, y_train)
-    return model
-
 
 def display_ml_section():
-    st.subheader("Train ML Model")
+    st.subheader("Mickey's Prediction Lab")
 
-    model_name = st.selectbox("Select Model", ["Decision Tree", "Logistic Regression"])
+    models = ["Choose Model", "LazyPredict - Classification", "LazyPredict - Regression"]
+    model_name = st.selectbox("Select Model", models)
 
     if "dataframe" in st.session_state:
-        features = st.session_state.dataframe.dropna(axis=1)
-        target_col = st.selectbox('Select Target Column:', features.columns)
-        features = features.drop(target_col, axis=1)
-
+        all_features = st.session_state.dataframe.columns.tolist()
+        target_col = st.selectbox('Select Target Column:', all_features)
+        available_features = [col for col in all_features if col != target_col]  
+        
+        if 'selected_features' not in st.session_state:
+            st.session_state.selected_features = available_features
+        
+        valid_defaults = [feat for feat in st.session_state.selected_features if feat in available_features]
+        
+        st.session_state.selected_features = st.multiselect('Select Features for Training:', available_features, default=valid_defaults)
+        
+        features = st.session_state.dataframe[st.session_state.selected_features]
         X = features.values
         y = st.session_state.dataframe[target_col].values
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        try:
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        except Exception as e:
+            st.error(f"Error during data split: {e}")
+            return
 
         if st.button("Train Model"):
-            with st.spinner("Training..."):
-                model = train_model(model_name, X_train, y_train)
-                y_pred = model.predict(X_test)
-                accuracy = accuracy_score(y_test, y_pred)
-                st.success(f"Model Trained. Test Accuracy: {accuracy:.2f}")
+            if model_name == "LazyPredict - Classification":
+                with st.spinner("Training using LazyPredict Classification..."):
+                    try:
+                        clf = LazyClassifier(verbose=0, ignore_warnings=True, custom_metric=None)
+                        models, predictions = clf.fit(X_train, X_test, y_train, y_test)
+                        st.write(models)
+                    except Exception as e:
+                        st.error(f"Error during LazyPredict classification: {e}")
+
+            elif model_name == "LazyPredict - Regression":
+                with st.spinner("Training using LazyPredict Regression..."):
+                    try:
+                        reg = LazyRegressor(verbose=0, ignore_warnings=True, custom_metric=None)
+                        models, predictions = reg.fit(X_train, X_test, y_train, y_test)
+                        st.write(models)
+                    except Exception as e:
+                        st.error(f"Error during LazyPredict regression: {e}")
 
 if 'page' not in st.session_state:
     st.session_state.page = "upload"
@@ -200,5 +221,4 @@ elif st.session_state.page == "eda":
     display_eda_section()
 elif st.session_state.page == "ml":
     display_ml_section()
-
 
