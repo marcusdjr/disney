@@ -1,6 +1,4 @@
-![IMG_IpJyLbB5fTeh](https://github.com/marcusdjr/disney/assets/31329300/a5462b5e-c803-446a-87a3-39ebbd6ba850)
-
-
+![mickey](https://github.com/marcusdjr/disney/assets/31329300/939b9f94-8c8a-46f7-8bf5-463783e79fd4)
 
 # Mickey's Machine Learning Lab
 
