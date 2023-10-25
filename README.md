@@ -23,3 +23,4 @@ LazyPredict Integration: The centerpiece of this lab is its ability to use LazyP
         
 
 # Demo
+![mickey](https://github.com/marcusdjr/disney/assets/31329300/2e9dd244-a6d7-4bc4-a950-253edff12624)
