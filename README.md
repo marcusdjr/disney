@@ -20,7 +20,7 @@ Display of null values in the dataset
 Data type of each column
 
 ## Machine Learning Model Training:
-LazyPredict Integration: The centerpiece of this lab is its ability to use LazyPredict, which allows users to quickly train and benchmark multiple algorithms to find the best fit for your dataset. Both classification and regression models from LazyPredict are supported.
+LazyPredict Integration: The centerpiece of this lab is its ability to use LazyPredict, which allows users to quickly train and benchmark multiple algorithms to find the best fit for their dataset. Both classification and regression models from LazyPredict are supported.
         
 
 # Demo
