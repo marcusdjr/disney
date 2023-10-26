@@ -7,7 +7,7 @@ Welcome to Mickey's Machine Learning Lab! This is an interactive web application
 # Features-
 
 ## Data Uploading:
-Users can easily upload their datasets in CSV format, with a preview option available to quickly glance at the initial rows of the dataset.
+Users can easily upload their datasets in CSV format.
 
 ## Exploratory Data Analysis (EDA):
 ### The application provides users with general statistics about the dataset, including features like:
